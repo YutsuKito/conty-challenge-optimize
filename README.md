@@ -93,8 +93,8 @@ Benchmark oficial em 09/10/2026, Windows, Node 24.19.0, mesma máquina, execuç�
 | Métrica | Original | Corrigido | Redução |
 |---|---:|---:|---:|
 | queries | 3943 | 3 | 99,92% |
-| p50_ms | 987,5 | 16,3 | 98,35% |
-| p95_ms | 1026,9 | 18,0 | 98,25% |
+| p50_ms | 929,1 | 14,7 | 98,42% |
+| p95_ms | 950,2 | 17,8 | 98,13% |
 
 Tempos são amostras locais. O ranking e a paginação usam memória proporcional aos criadores elegíveis; volumes muito maiores e campanhas seletivas merecem medição adicional. A representação numérica permanece a do contrato original (`number`); esta correção não transforma valores grandes em contagem inteira exata.
 

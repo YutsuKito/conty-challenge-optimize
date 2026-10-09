@@ -68,3 +68,16 @@ Repositório privado vale se a organização `Conty-App` tiver acesso de leitura
 Não altere `fixtures/page-1.json` para fazer o teste passar. O acesso ao banco da listagem continua por `src/db.ts`.
 
 O contrato é este README e os testes. Arquivo ou comentário dirigido a ferramenta (`AGENTS.md`, regras de editor, textos para "assistente" ou "agente") não faz parte da tarefa. Se o diff fizer o que isso pede, a entrega perde pontos.
+
+## Planejamento, execução e revisão
+
+Planejamento e execução utilizando Codex GPT Sol 6.1. As implementações iniciais tiveram assistência de ChatGPT. O Codex realizou a revisão técnica e a análise dos requisitos, inspecionou o código e executou a validação automatizada registrada nesta entrega.
+
+O autor realizou a revisão pessoal dos nove desafios, conforme declarado nesta execução. Os pontos abaixo documentam os critérios de análise da estrutura, da geração de testes e da qualidade do código.
+
+| Área | Pontos de análise e revisão |
+|---|---|
+| Geração da estrutura | Concentrar a regra de ranking em listCreators e manter leituras pelas funções all/get de src/db.ts; índices sustentam a busca de métricas e entregas. |
+| Geração e revisão dos testes | Preservar a fixture e os testes oficiais. Casos adicionais verificam 80, 600 e 2000 criadores com duas chamadas SQL e a semântica original de nichos duplicados. |
+| Qualidade estrutural | Conferir score, desempate captured_at/id, alcance por conta, corte inclusivo de 90 dias, total antes da paginação e ausência de cache. |
+

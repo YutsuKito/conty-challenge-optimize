@@ -93,9 +93,14 @@ Benchmark oficial em 09/10/2026, Windows, Node 24.19.0, mesma máquina, execuç�
 | Métrica | Original | Corrigido | Redução |
 |---|---:|---:|---:|
 | queries | 3943 | 3 | 99,92% |
-| p50_ms | 929,1 | 14,7 | 98,42% |
-| p95_ms | 950,2 | 17,8 | 98,13% |
+| p50_ms | 1005,0 | 13,9 | 98,62% |
+| p95_ms | 1123,8 | 15,9 | 98,59% |
 
 Tempos são amostras locais. O ranking e a paginação usam memória proporcional aos criadores elegíveis; volumes muito maiores e campanhas seletivas merecem medição adicional. A representação numérica permanece a do contrato original (`number`); esta correção não transforma valores grandes em contagem inteira exata.
 
 Esta atualização foi implementada e validada automaticamente pelo Codex após a revisão pessoal anteriormente declarada pelo autor. Cabe ao autor conferir a nova estratégia de consultas e os novos testes antes da submissão.
+## Auditoria de dependências em 09/10/2026
+
+O executor de testes foi atualizado para Vitest 4.1.11 e o lockfile foi regenerado. A auditoria anterior apontava três alertas em ferramentas de desenvolvimento; `npm audit` após a atualização informou zero vulnerabilidades conhecidas. As suítes oficiais e a compilação TypeScript passaram sem alterações nos testes, configuração de avaliação ou scripts de execução. Referência da migração: https://v4.vitest.dev/guide/migration.html.
+
+Essa atualização foi implementada e validada pelo Codex após a revisão pessoal anteriormente declarada pelo autor.

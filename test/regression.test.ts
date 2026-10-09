@@ -5,13 +5,13 @@ import { CAMPAIGN_ID, seed } from "../src/seed.ts";
 
 describe("custo constante da listagem", () => {
   for (const creators of [80, 600, 2000]) {
-    it(`${creators} criadores usam duas chamadas SQL`, async () => {
+    it(`${creators} criadores usam três chamadas SQL`, async () => {
       const db = openDatabase();
       seed(db, { creators, seed: 7 });
       resetQueryCount();
       const page = await listCreators(db, { campaignId: CAMPAIGN_ID, limit: 20, offset: 0 });
       expect(page?.creators.length).toBeLessThanOrEqual(20);
-      expect(getQueryCount()).toBe(2);
+      expect(getQueryCount()).toBe(3);
       db.close();
     });
   }

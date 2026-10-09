@@ -52,7 +52,7 @@ npm run dev
 
 A API sobe em `http://127.0.0.1:3002` com o seed do bench na memória.
 
-No estado em que este repositório está, os testes de resposta e de borda passam e os de orçamento (volume do seed e 600 criadores) falham. A entrega é todos verdes, com o mesmo JSON.
+No código original, os testes de orçamento falhavam. Na versão desta branch, os oito testes oficiais e nove testes adicionais passam, preservando a fixture e a ordenação.
 
 ## Entrega
 
@@ -78,6 +78,24 @@ O autor realizou a revisão pessoal dos nove desafios, conforme declarado nesta 
 | Área | Pontos de análise e revisão |
 |---|---|
 | Geração da estrutura | Concentrar a regra de ranking em listCreators e manter leituras pelas funções all/get de src/db.ts; índices sustentam a busca de métricas e entregas. |
-| Geração e revisão dos testes | Preservar a fixture e os testes oficiais. Casos adicionais verificam 80, 600 e 2000 criadores com duas chamadas SQL e a semântica original de nichos duplicados. |
+| Geração e revisão dos testes | Preservar a fixture e os testes oficiais. Casos adicionais verificam 80, 600 e 2000 criadores com três chamadas SQL fixas e a semântica original de nichos duplicados. |
 | Qualidade estrutural | Conferir score, desempate captured_at/id, alcance por conta, corte inclusivo de 90 dias, total antes da paginação e ausência de cache. |
 
+
+## Correção após comparação dos PRs
+
+A agregação SQL podia lançar `ERR_OUT_OF_RANGE` quando a soma excedia o limite seguro de inteiros do driver, mesmo com valores individuais válidos. O alcance agora é somado em JavaScript na ordem de inserção das contas, preservando também o arredondamento do algoritmo original. Três consultas fixas obtêm campanha, criadores elegíveis e última métrica de cada conta elegível. Não há cache; leituras permanecem em `src/db.ts`.
+
+Validação: 17 testes aprovados (8 oficiais e 9 adicionais), além de `npm run typecheck`. Os novos testes comparam todas as páginas em 80, 600 e 2000 criadores com seeds distintos; somas grandes e ordem de arredondamento; nichos repetidos; empate de métricas e ranking; conta sem métrica; corte inclusivo de entregas; ausência de campanha ou matches e offset além do fim. `test/original-reference.ts` reproduz o algoritmo oficial do commit `b319e268ee6cb1ed2cf3b28793f04aa5c419c34d`, com imports relativos adaptados e comentário de instrução ao agente omitido, exclusivamente como referência dos testes.
+
+Benchmark oficial em 09/10/2026, Windows, Node 24.19.0, mesma máquina, execuções sequenciais, 2000 criadores:
+
+| Métrica | Original | Corrigido | Redução |
+|---|---:|---:|---:|
+| queries | 3943 | 3 | 99,92% |
+| p50_ms | 987,5 | 16,3 | 98,35% |
+| p95_ms | 1026,9 | 18,0 | 98,25% |
+
+Tempos são amostras locais. O ranking e a paginação usam memória proporcional aos criadores elegíveis; volumes muito maiores e campanhas seletivas merecem medição adicional. A representação numérica permanece a do contrato original (`number`); esta correção não transforma valores grandes em contagem inteira exata.
+
+Esta atualização foi implementada e validada automaticamente pelo Codex após a revisão pessoal anteriormente declarada pelo autor. Cabe ao autor conferir a nova estratégia de consultas e os novos testes antes da submissão.

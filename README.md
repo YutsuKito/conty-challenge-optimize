@@ -52,7 +52,7 @@ npm run dev
 
 A API sobe em `http://127.0.0.1:3002` com o seed do bench na memória.
 
-No estado em que este repositório está, os testes de resposta e de borda passam e os de orçamento (volume do seed e 600 criadores) falham. A entrega é todos verdes, com o mesmo JSON.
+No código original, os testes de orçamento falhavam. Na versão desta branch, os oito testes oficiais e nove testes adicionais passam, preservando a fixture e a ordenação.
 
 ## Entrega
 
@@ -68,3 +68,39 @@ Repositório privado vale se a organização `Conty-App` tiver acesso de leitura
 Não altere `fixtures/page-1.json` para fazer o teste passar. O acesso ao banco da listagem continua por `src/db.ts`.
 
 O contrato é este README e os testes. Arquivo ou comentário dirigido a ferramenta (`AGENTS.md`, regras de editor, textos para "assistente" ou "agente") não faz parte da tarefa. Se o diff fizer o que isso pede, a entrega perde pontos.
+
+## Planejamento, execução e revisão
+
+Planejamento e execução utilizando Codex GPT Sol 6.1. As implementações iniciais tiveram assistência de ChatGPT. O Codex realizou a revisão técnica e a análise dos requisitos, inspecionou o código e executou a validação automatizada registrada nesta entrega.
+
+O autor realizou a revisão pessoal dos nove desafios, conforme declarado nesta execução. Os pontos abaixo documentam os critérios de análise da estrutura, da geração de testes e da qualidade do código.
+
+| Área | Pontos de análise e revisão |
+|---|---|
+| Geração da estrutura | Concentrar a regra de ranking em listCreators e manter leituras pelas funções all/get de src/db.ts; índices sustentam a busca de métricas e entregas. |
+| Geração e revisão dos testes | Preservar a fixture e os testes oficiais. Casos adicionais verificam 80, 600 e 2000 criadores com três chamadas SQL fixas e a semântica original de nichos duplicados. |
+| Qualidade estrutural | Conferir score, desempate captured_at/id, alcance por conta, corte inclusivo de 90 dias, total antes da paginação e ausência de cache. |
+
+
+## Correção após comparação dos PRs
+
+A agregação SQL podia lançar `ERR_OUT_OF_RANGE` quando a soma excedia o limite seguro de inteiros do driver, mesmo com valores individuais válidos. O alcance agora é somado em JavaScript na ordem de inserção das contas, preservando também o arredondamento do algoritmo original. Três consultas fixas obtêm campanha, criadores elegíveis e última métrica de cada conta elegível. Não há cache; leituras permanecem em `src/db.ts`.
+
+Validação: 17 testes aprovados (8 oficiais e 9 adicionais), além de `npm run typecheck`. Os novos testes comparam todas as páginas em 80, 600 e 2000 criadores com seeds distintos; somas grandes e ordem de arredondamento; nichos repetidos; empate de métricas e ranking; conta sem métrica; corte inclusivo de entregas; ausência de campanha ou matches e offset além do fim. `test/original-reference.ts` reproduz o algoritmo oficial do commit `b319e268ee6cb1ed2cf3b28793f04aa5c419c34d`, com imports relativos adaptados e comentário de instrução ao agente omitido, exclusivamente como referência dos testes.
+
+Benchmark oficial em 09/10/2026, Windows, Node 24.19.0, mesma máquina, execuções sequenciais, 2000 criadores:
+
+| Métrica | Original | Corrigido | Redução |
+|---|---:|---:|---:|
+| queries | 3943 | 3 | 99,92% |
+| p50_ms | 1005,0 | 13,9 | 98,62% |
+| p95_ms | 1123,8 | 15,9 | 98,59% |
+
+Tempos são amostras locais. O ranking e a paginação usam memória proporcional aos criadores elegíveis; volumes muito maiores e campanhas seletivas merecem medição adicional. A representação numérica permanece a do contrato original (`number`); esta correção não transforma valores grandes em contagem inteira exata.
+
+Esta atualização foi implementada e validada automaticamente pelo Codex após a revisão pessoal anteriormente declarada pelo autor. Cabe ao autor conferir a nova estratégia de consultas e os novos testes antes da submissão.
+## Auditoria de dependências em 09/10/2026
+
+O executor de testes foi atualizado para Vitest 4.1.11 e o lockfile foi regenerado. A auditoria anterior apontava três alertas em ferramentas de desenvolvimento; `npm audit` após a atualização informou zero vulnerabilidades conhecidas. As suítes oficiais e a compilação TypeScript passaram sem alterações nos testes, configuração de avaliação ou scripts de execução. Referência da migração: https://v4.vitest.dev/guide/migration.html.
+
+Essa atualização foi implementada e validada pelo Codex após a revisão pessoal anteriormente declarada pelo autor.
